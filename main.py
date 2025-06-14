@@ -17,6 +17,7 @@ CONS_DETECT_INTERVAL = 0.5      # Max time interval for consecutive detections
 CONS_DETECT_COUNT = 3           # Number of consecutive frames to consider a valid prediction.
 
 PRIORITY_CLASSES = {'green', 'red', 'yellow', 'left green', 'stop', 'yield'}
+LIGHTS = {'green', 'red', 'yellow', 'left green'}
 
 # Audio Files
 GREEN = "audio_files/green_light.mp3"
@@ -172,6 +173,13 @@ while True:
         classidx = int(detection.cls.item())
         classname = labels[classidx]
 
+        # Ignore lights near the left or right edges of the frame, as they may
+        # belong to cross traffic.
+        if classname in LIGHTS:
+            x = frame.shape[1]
+            if xmax <= 0.1 * x or xmin >= 0.9 * x:
+                continue
+
         conf = detection.conf.item()
 
         if conf >= CONF_THRES:
@@ -225,7 +233,8 @@ while True:
     # Display the image
     cv2.imshow('YOLO detection results',frame)
 
-    # If inferencing on individual images, wait for user keypress before moving to next image. Otherwise, wait 5ms before moving to next frame.
+    # If inferencing on individual images, wait for user keypress before moving 
+    # to next image. Otherwise, wait 5ms before moving to next frame.
     if source_type == 'image' or source_type == 'folder':
         key = cv2.waitKey()
     elif source_type == 'video' or source_type == 'usb':
