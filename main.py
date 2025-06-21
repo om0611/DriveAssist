@@ -5,6 +5,7 @@ import argparse
 from collections import deque
 
 import cv2
+import easyocr
 import pygame
 import numpy as np
 from ultralytics import YOLO
@@ -55,6 +56,8 @@ def play_music(mp3_file):
     pygame.mixer.music.load(mp3_file)
     pygame.mixer.music.play()
 
+# Initialize the easyocr reader
+reader = easyocr.Reader(['en'])
 
 # Initialize the pygame mixer
 pygame.mixer.init()
@@ -126,6 +129,7 @@ frame_rate_buffer = deque()
 buffer_len = 200
 img_idx = 0
 
+curr_speed = ""     # variable to store current speed
 
 audio_queue = deque()   # A queue for storing the classes to be announced.
 audio_playing = None    # A string storing the class currently being announced if any. 
@@ -205,10 +209,34 @@ while True:
                     if (classname not in detection_counts) or (time.time() - detection_counts[classname][1] > CONS_DETECT_INTERVAL) :
                         detection_counts[classname] = [1, time.time()]
 
-                    elif detection_counts[classname][0] == CONS_DETECT_COUNT:
+                    elif detection_counts[classname][0] == CONS_DETECT_COUNT - 1:
                         detection_counts.pop(classname)
+
                         if (classname in PRIORITY_CLASSES):
                             audio_queue.appendleft(classname)
+
+                        elif classname == "speed": 
+                            # Get speed limit using OCR
+                            ocr_results = reader.readtext(frame[ymin:ymax+1, xmin:xmax+1])
+                            if not ocr_results:
+                                continue
+                            curr_speed = ""
+                            ocr_text = "".join([text for _, text, _ in ocr_results])
+                            if "40" in ocr_text:
+                                curr_speed = "speed 40"
+                            elif "50" in ocr_text:
+                                curr_speed = "speed 50"
+                            elif "60" in ocr_text:
+                                curr_speed = "speed 60"
+                            elif "70" in ocr_text:
+                                curr_speed = "speed 70"
+                            elif "80" in ocr_text:
+                                curr_speed = "speed 80"
+                            else:   # False positive
+                                continue
+
+                            audio_queue.append(classname)
+                                
                         else:
                             audio_queue.append(classname)
                     else:
@@ -222,7 +250,10 @@ while True:
         audio_playing = None
     if audio_queue and not audio_playing:
         class_name = audio_queue.popleft()
-        play_music(AUDIO_FILES[class_name])
+        if class_name == 'speed':
+            play_music(AUDIO_FILES[curr_speed])
+        else:
+            play_music(AUDIO_FILES[class_name])
         audio_playing = class_name
         last_announced[class_name] = time.time()
 
