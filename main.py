@@ -7,6 +7,7 @@ from collections import deque
 import cv2
 import easyocr
 import pygame
+import torch
 import numpy as np
 from ultralytics import YOLO
 
@@ -51,6 +52,9 @@ AUDIO_FILES = {
     'speed 80': SPEED_80, 
 }
 
+device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+print(device)
+
 # Function to play audio file
 def play_music(mp3_file):
     pygame.mixer.music.load(mp3_file)
@@ -75,6 +79,7 @@ source = args.source
 
 # Load model
 model = YOLO(model_path, task='detect')
+model.to(device)
 labels = model.names
 
 img_ext_list = ['.jpg','.JPG','.jpeg','.JPEG','.png','.PNG','.bmp','.BMP']
