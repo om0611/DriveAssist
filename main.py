@@ -193,16 +193,16 @@ while True:
 
         if conf >= CONF_THRES:
 
-            # Draw bounding box
-            colour = colours[classidx]
-            cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), colour, thickness=2)
+            # # Draw bounding box
+            # colour = colours[classidx]
+            # cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), colour, thickness=2)
 
-            # Draw box label
-            label = f'{classname}: {int(conf*100)}%'
-            labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)  # Get font size
-            label_ymin = max(ymin, labelSize[1] + 10)   # Make sure not to draw label too close to top of window
-            cv2.rectangle(frame, (xmin, label_ymin-labelSize[1]-10), (xmin+labelSize[0], label_ymin+baseLine-10), colour, cv2.FILLED)   # Draw white box to put label text in
-            cv2.putText(frame, label, (xmin, label_ymin-7), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)    # Draw label text
+            # # Draw box label
+            # label = f'{classname}: {int(conf*100)}%'
+            # labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)  # Get font size
+            # label_ymin = max(ymin, labelSize[1] + 10)   # Make sure not to draw label too close to top of window
+            # cv2.rectangle(frame, (xmin, label_ymin-labelSize[1]-10), (xmin+labelSize[0], label_ymin+baseLine-10), colour, cv2.FILLED)   # Draw white box to put label text in
+            # cv2.putText(frame, label, (xmin, label_ymin-7), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)    # Draw label text
 
 
             # Add the class to the audio queue given that it is not already in the queue and 
@@ -262,12 +262,14 @@ while True:
         audio_playing = class_name
         last_announced[class_name] = time.time()
 
-    # Draw framerate (if using video or USB)
-    if source_type == 'video' or source_type == 'usb':
-        cv2.putText(frame, f'FPS: {average_fps:0.2f}', (10,20), cv2.FONT_HERSHEY_SIMPLEX, .7, (0,255,255), 2)
+    # # Draw framerate (if using video or USB)
+    # if source_type == 'video' or source_type == 'usb':
+    #     cv2.putText(frame, f'FPS: {average_fps:0.2f}', (10,20), cv2.FONT_HERSHEY_SIMPLEX, .7, (0,255,255), 2)
 
-    # Display the image
-    cv2.imshow('YOLO detection results',frame)
+    print(round(average_fps, 2))
+
+    # # Display the image
+    # cv2.imshow('YOLO detection results',frame)
 
     # If inferencing on individual images, wait for user keypress before moving 
     # to next image. Otherwise, wait 5ms before moving to next frame.
