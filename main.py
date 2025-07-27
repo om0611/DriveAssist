@@ -3,6 +3,7 @@ import sys
 import time
 import argparse
 from collections import deque
+from pathlib import Path
 
 import cv2
 import easyocr
@@ -113,7 +114,7 @@ elif source_type == 'folder':
     for file in os.listdir(source):
         root, ext = os.path.splitext(file)
         if ext in img_ext_list:
-            images.append(file)
+            images.append(Path(source) / file)
 elif source_type == 'video':
     stream = cv2.VideoCapture(source)
 else:
@@ -159,6 +160,7 @@ while True:
             print('All images have been processed. Exiting program.')
             sys.exit(0)
         image = images[img_idx]
+        print(image)
         frame = cv2.imread(image)
         img_idx += 1
     
