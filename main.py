@@ -52,8 +52,14 @@ AUDIO_FILES = {
     'speed 80': SPEED_80, 
 }
 
-device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
-print(device)
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+elif torch.backends.mps.is_available():
+    device = torch.device("mps")
+else:
+    device = torch.device("cpu")
+
+print("Device:", device)
 
 # Function to play audio file
 def play_music(mp3_file):
