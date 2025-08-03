@@ -84,6 +84,10 @@ https://drive.google.com/file/d/1akh2-6TfXNgXhZpitiBZOvNwW9qbtRs7/view?usp=drive
 
 To train your own model, you can use the following notebook: https://colab.research.google.com/drive/1lJACvS_HwbCpCmPS5d_K2_c1bcA_c3JR?usp=drive_link
 
+## Dataset
+
+To train the YOLO model, I created my own dataset, consisting of 370 dashcam images, and annotated it using the Roboflow platform. The dataset can be found here: https://drive.google.com/drive/folders/1fBAwNc9KgO--8yRwXxo6NV8RZowYXSSc?usp=sharing
+
 ## Acknowledgements
 
 -   [How to train a YOLO model - Edje Electronics](https://www.youtube.com/watch?v=r0RspiLG260)
