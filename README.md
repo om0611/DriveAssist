@@ -52,13 +52,27 @@ https://drive.google.com/file/d/1akh2-6TfXNgXhZpitiBZOvNwW9qbtRs7/view?usp=drive
     python -m venv <env_name>
     ```
 
-6. Install dependencies
+6. Activate the virtual environment:
+
+    Linux and macOS:
+
+    ```bash
+    source <env_name>/bin/activate
+    ```
+
+    Windows:
+
+    ```cmd
+    <env_name>\Scripts\activate
+    ```
+
+7. Install dependencies
 
     ```bash
     pip install -r requirements.txt
     ```
 
-7. Run inference:
+8. Run inference:
 
     - Single Image:
         ```bash
